@@ -1,7 +1,7 @@
 import streamlit as st
 import pickle
 
-pipe = pickle.load(,"rb")
+pipe = pickle.load(open("models/spam_predictor.pkl","rb"))
 
 st.title("SMS spam predictor")
 
