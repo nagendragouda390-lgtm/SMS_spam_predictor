@@ -17,5 +17,5 @@ if st.button("Predict"):
     if pred == 1:
       st.error("Spam !")
     else:
-      st.success("Not spam !\n\n Prob : {prob}")
+      st.success(f"Not spam !\n\n Prob : {prob:.2%}")
   
