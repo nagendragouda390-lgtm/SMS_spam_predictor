@@ -1,2 +1,7 @@
-streamlit
+Flask
+gunicorn
+joblib
 scikit-learn
+nltk
+numpy
+scipy
