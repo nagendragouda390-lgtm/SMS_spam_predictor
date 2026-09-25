@@ -24,19 +24,19 @@ ps = PorterStemmer()
 #-----------------------------
 
 def clean_text(text):
-text = text.lower()
+    text = text.lower()
 
-text = text.translate(
+    text = text.translate(
     str.maketrans("", "", string.punctuation)
 )
 
-words = text.split()
+    words = text.split()
 
-words = [w for w in words if w not in eng]
+    words = [w for w in words if w not in eng]
 
-words = [ps.stem(w) for w in words]
+    words = [ps.stem(w) for w in words]
 
-return " ".join(words)
+    return " ".join(words)
 
 #-----------------------------
 
