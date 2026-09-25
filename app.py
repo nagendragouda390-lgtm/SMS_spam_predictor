@@ -67,10 +67,13 @@ def home():
                 [cleaned_message]
             )[0]
 
+            prob = model.predict_proba([cleaned_message])[0][1]
+
     return render_template(
         "index.html",
         prediction=prediction,
-        message=message
+        message=message,
+        prob = prob
     )
 
 
