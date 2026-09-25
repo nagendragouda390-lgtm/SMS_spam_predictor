@@ -1,22 +1,84 @@
-import streamlit as st
-import pickle
+from flask import Flask, request, render_template
+import joblib
+import string
+import nltk
 
-with open("models/spam_predictor.pkl", "rb") as f:
-    pipe = pickle.load(f)
+from nltk.corpus import stopwords
+from nltk.stem import PorterStemmer
 
-st.title("SMS spam predictor")
 
-message = st.text_area("enter sms")
+# -----------------------------
+# NLTK setup
+# -----------------------------
+nltk.download("stopwords", quiet=True)
 
-if st.button("Predict"):
-  if message.strip() == "":
-    st.warning("Please enter message ")
-  else:
-    pred = pipe.predict(message)[0]
-    prob = pipe.predict_proba(message)[0][1]
+eng = set(stopwords.words("english"))
+ps = PorterStemmer()
 
-    if pred == 1:
-      st.error("Spam !")
-    else:
-      st.success(f"Not spam !\n\n Prob : {prob:.2%}")
-  
+
+# -----------------------------
+# Text preprocessing
+# -----------------------------
+def clean_text(text):
+    text = text.lower()
+
+    text = text.translate(
+        str.maketrans("", "", string.punctuation)
+    )
+
+    words = text.split()
+
+    words = [w for w in words if w not in eng]
+
+    words = [ps.stem(w) for w in words]
+
+    return " ".join(words)
+
+
+# -----------------------------
+# Load complete ML pipeline
+# -----------------------------
+model = joblib.load("spam_model.pkl")
+
+
+# -----------------------------
+# Flask app
+# -----------------------------
+app = Flask(__name__)
+
+
+@app.route("/", methods=["GET", "POST"])
+def home():
+
+    prediction = None
+    message = ""
+
+    if request.method == "POST":
+
+        message = request.form.get("message", "")
+
+        if message.strip():
+
+            # Same preprocessing used during training
+            cleaned_message = clean_text(message)
+
+            # Pipeline handles TF-IDF + model
+            prediction = model.predict(
+                [cleaned_message]
+            )[0]
+
+    return render_template(
+        "index.html",
+        prediction=prediction,
+        message=message
+    )
+
+
+# -----------------------------
+# Start Flask
+# -----------------------------
+if __name__ == "__main__":
+    app.run(
+        host="0.0.0.0",
+        port=10000
+    )
