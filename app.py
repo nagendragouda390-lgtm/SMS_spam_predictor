@@ -57,36 +57,36 @@ app = Flask(name)
 @app.route("/", methods=["GET", "POST"])
 def home():
 
-prediction = None
-message = ""
-prob = None
+    prediction = None
+    message = ""
+    prob = None
 
-if request.method == "POST":
+    if request.method == "POST":
 
-    message = request.form.get("message", "").strip()
+        message = request.form.get("message", "").strip()
 
-    if message:
+        if message:
 
         # Same preprocessing used during training
-        cleaned_message = clean_text(message)
+            cleaned_message = clean_text(message)
 
         # Pipeline handles TF-IDF + model
-        prediction = model.predict(
-            [cleaned_message]
-        )[0]
+            prediction = model.predict(
+                [cleaned_message]
+            )[0]
 
         # Probability of class 1 (Spam)
-        if hasattr(model, "predict_proba"):
-            prob = model.predict_proba(
-                [cleaned_message]
-            )[0][1]
+            if hasattr(model, "predict_proba"):
+                prob = model.predict_proba(
+                    [cleaned_message]
+                )[0][1]
 
-return render_template(
-    "index.html",
-    prediction=prediction,
-    message=message,
-    prob=prob
-)
+    return render_template(
+        "index.html",
+        prediction=prediction,
+        message=message,
+        prob=prob
+    )
 
 #-----------------------------
 
