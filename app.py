@@ -38,7 +38,7 @@ def clean_text(text):
 # -----------------------------
 # Load complete ML pipeline
 # -----------------------------
-model = joblib.load("spam_model.pkl")
+model = joblib.load("models/pipe.pkl")
 
 
 # -----------------------------
