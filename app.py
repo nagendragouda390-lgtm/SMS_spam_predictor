@@ -44,7 +44,7 @@ def clean_text(text):
 
 #-----------------------------
 
-model = joblib.load("models/pipe.pkl")
+model = joblib.load("models/pipeline27092026.pkl")
 
 #-----------------------------
 
